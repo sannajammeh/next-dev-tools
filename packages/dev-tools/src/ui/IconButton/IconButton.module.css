@@ -1,0 +1,29 @@
+.root {
+  appearance: none;
+  background: var(--mauve-2);
+  border: 1px solid var(--mauve-3);
+  border-radius: 0.5rem;
+  aspect-ratio: 1;
+  width: 36px;
+  flex-shrink: 0;
+  color: var(--mauve-11);
+
+  &:hover {
+    background: var(--mauve-3);
+    border-color: var(--mauve-5);
+    color: var(--mauve-11);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & svg {
+    width: 16px;
+    height: 16px;
+  }
+}

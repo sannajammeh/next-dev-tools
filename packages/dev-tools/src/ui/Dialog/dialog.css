@@ -1,0 +1,28 @@
+.fr-dialog {
+  max-width: 100%;
+  position: fixed;
+  padding: 0;
+  display: block;
+  inset: 0;
+  overflow: hidden;
+
+  &:not([open]) {
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  &[open] {
+    pointer-events: auto;
+    visibility: visible;
+
+    &::backdrop {
+      background-color: rgb(0 0 0 / 50%);
+    }
+  }
+
+  & .fr-dialog__content {
+    width: 100%;
+    height: auto;
+    overscroll-behavior: contain;
+  }
+}

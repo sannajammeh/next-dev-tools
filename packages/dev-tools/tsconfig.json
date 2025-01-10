@@ -1,0 +1,7 @@
+{
+  "extends": "@frend-digital/config/tsconfig/library",
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,71 @@
+.Viewport {
+  --ease-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  --drawer-spacing-inline: 15px;
+  --transform-x-in: 0;
+  --transform-x-out: 100%;
+
+  background-color: transparent;
+
+  position: fixed;
+  top: unset;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0;
+  max-width: unset;
+  max-height: unset;
+  height: fit-content;
+  width: 100%;
+
+  max-width: 90vw;
+  border: none;
+  appearance: none;
+  border-radius: 1rem;
+  --timing: 0.5s;
+
+  transition:
+    display var(--timing) allow-discrete,
+    overlay var(--timing) allow-discrete,
+    transform var(--timing),
+    opacity var(--timing);
+
+  transition-timing-function: var(--ease-expo);
+
+  opacity: 0;
+  transform: scale(0.9) translateY(10%) translateX(-50%);
+  transform-origin: bottom left;
+
+  &[open] {
+    opacity: 1;
+    transform: scale(1) translateY(0) translateX(-50%);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.9) translateY(10%) translateX(-50%);
+    }
+  }
+
+  &.right {
+    --transform-x-in: 0;
+    --transform-x-out: -100%;
+    right: unset;
+    left: 0;
+  }
+}
+
+.Content {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--background);
+  border-radius: 1rem;
+  overflow: auto;
+
+  border: 1px solid var(--color-border);
+  & > * {
+    flex-shrink: 1;
+  }
+}
