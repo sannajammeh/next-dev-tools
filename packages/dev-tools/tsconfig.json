@@ -1,6 +1,7 @@
 {
   "extends": "@next-utils/typescript-config/react-library.json",
   "compilerOptions": {
+    "module": "Preserve",
     "moduleResolution": "bundler"
   },
   "include": ["src"]

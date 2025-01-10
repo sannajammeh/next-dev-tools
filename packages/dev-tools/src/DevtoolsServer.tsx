@@ -20,6 +20,7 @@ import { ModalContent, ModalRoot, ModalViewport } from "./ui/Modal";
 import { Tab, TabsRoot, TabsTrigger } from "./ui/Tabs";
 
 const SidebarItem = classed(TabsTrigger, styles.sidebarItem!);
+const StyledTab = classed(Tab, styles.tab!);
 
 export const DevtoolsServer = () => {
   return (
@@ -70,15 +71,15 @@ export const DevtoolsServer = () => {
                     <SidebarToggle />
                   </footer>
                 </Sidebar>
-                <Tab value="overview">
+                <StyledTab value="overview">
                   <Overview />
-                </Tab>
-                <Tab value="opengraph">
+                </StyledTab>
+                <StyledTab value="opengraph">
                   <OpenGraph />
-                </Tab>
-                <Tab value="settings">
+                </StyledTab>
+                <StyledTab value="settings">
                   <Settings />
-                </Tab>
+                </StyledTab>
               </ModalContent>
             </ModalViewport>
           </ModalRoot>
