@@ -1,5 +1,5 @@
 {
-  "extends": "@frend-digital/config/tsconfig/library",
+  "extends": "@next-utils/typescript-config/react-library.json",
   "compilerOptions": {
     "moduleResolution": "bundler"
   },
