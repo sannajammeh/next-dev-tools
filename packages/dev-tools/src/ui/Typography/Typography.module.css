@@ -1,0 +1,8 @@
+.root {
+  &.title {
+    all: unset;
+
+    font-size: 20px;
+    font-weight: medium;
+  }
+}

@@ -1,15 +1,22 @@
 "use client";
 
 import humanize from "humanize-string";
-import { FileImageIcon, ImagesIcon, LinkIcon, TwitterIcon } from "lucide-react";
+import {
+  FileImageIcon,
+  ImagesIcon,
+  LinkIcon,
+  RefreshCwIcon,
+  TwitterIcon,
+} from "lucide-react";
 import type { Metadata } from "next";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Details, DetailsContent, Summary } from "../ui/Details";
 import styles from "./OpenGraph.module.css";
 
 import { classed } from "@tw-classed/react";
 import { usePathname } from "next/navigation";
 import * as TabsPrimitive from "../ui/Tabs";
+import { IconButton } from "../ui/IconButton";
 
 const Tabs = TabsPrimitive.TabsRoot;
 const TabsList = classed("div", styles.tabList!);
@@ -29,11 +36,13 @@ function getLinkData(link: HTMLLinkElement) {
   };
 }
 
+type LinkType = ReturnType<typeof getLinkData>;
+
 export const OpenGraph = ({}: OpenGraphProps) => {
   const pathname = usePathname();
   const [metadata, setMetadata] = useState<Metadata | null>(null);
 
-  useEffect(() => {
+  const loadMetdata = useCallback(() => {
     const metatags = document.querySelectorAll("meta");
 
     const og = (Array.from(metatags) as Element[]).reduce((acc, meta) => {
@@ -94,6 +103,14 @@ export const OpenGraph = ({}: OpenGraphProps) => {
       alternates.canonical = data.href;
     }
 
+    const alternateLinks = Object.fromEntries(
+      Array.from(
+        document.querySelectorAll<HTMLLinkElement>("link[rel=alternate]")
+      ).map((link) => [link.hreflang, getLinkData(link).href])
+    );
+
+    alternates.languages = alternateLinks;
+
     const meta: Metadata = {
       title: document.title,
       openGraph,
@@ -103,6 +120,10 @@ export const OpenGraph = ({}: OpenGraphProps) => {
 
     setMetadata(meta);
   }, [pathname]);
+
+  useEffect(() => {
+    loadMetdata();
+  }, [loadMetdata]);
 
   const ogImages = metadata?.openGraph?.images;
   const twitterImages = metadata?.twitter?.images;
@@ -117,7 +138,13 @@ export const OpenGraph = ({}: OpenGraphProps) => {
   return (
     <div className={styles.root}>
       <div style={{ flexGrow: 1 }}>
-        {metadata && <Traverse object={metadata} name="Tags" />}
+        {metadata && (
+          <Traverse object={metadata} name="Tags">
+            <IconButton onClick={loadMetdata} className={styles.refresh}>
+              <RefreshCwIcon />
+            </IconButton>
+          </Traverse>
+        )}
       </div>
       <div className={styles.tabs}>
         <Tabs defaultValue="Google">
@@ -191,6 +218,7 @@ const Traverse = memo(
     nested,
     nestedName,
     level = 0,
+    children,
   }: {
     object: Record<string, any> | any[] | string | number;
     name?: string;
@@ -198,13 +226,37 @@ const Traverse = memo(
     nestedName?: string;
     open?: boolean;
     level?: number;
+    children?: React.ReactNode;
   }) => {
+    let nameToUse: React.ReactNode = humanize(name || "");
+    if (nestedName === "languages") {
+      nameToUse = (
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.25rem",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {name?.length === 2 && (
+            <img
+              width={16}
+              src={`https://www.unknown.nu/flags/images/${name?.toLowerCase()}-100`}
+            />
+          )}
+          <code>{name!}</code>
+        </span>
+      );
+    }
+
     if (Array.isArray(object)) {
       return (
         <Details open={level === 0} name={nestedName} data-nested={nested}>
           <Summary>
             {name && (Icons[name as keyof typeof Icons] || null)}
-            {humanize(name || "Array")}
+            {nameToUse}
+            {children}
           </Summary>
           <DetailsContent>
             {object.map((item, index) => (
@@ -227,7 +279,8 @@ const Traverse = memo(
         <Details open={level === 0} name={nestedName} data-nested={nested}>
           <Summary>
             {name && (Icons[name as keyof typeof Icons] || null)}
-            {humanize(name || "Object")}
+            {nameToUse}
+            {children}
           </Summary>
           <DetailsContent>
             {Object.entries(object).map(([key, value]) => (
@@ -259,7 +312,7 @@ const Traverse = memo(
               <tr>
                 {name && (
                   <td>
-                    <code>{humanize(name)}</code>
+                    <code>{nameToUse}</code>
                   </td>
                 )}
                 <td>
@@ -284,7 +337,7 @@ const Traverse = memo(
           <tbody>
             <tr>
               <td>
-                <code>{humanize(name ? name : "")}</code>
+                <code>{nameToUse}</code>
               </td>
               <td>
                 <code>{object}</code>

@@ -6,6 +6,11 @@
   height: 100%;
 }
 
+.refresh {
+  margin-left: auto;
+  margin-right: 30px;
+}
+
 .text {
   border-radius: 0;
   width: 100%;

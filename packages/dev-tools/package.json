@@ -9,11 +9,21 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./components": {
+      "types": "./src/components.tsx",
+      "default": "./src/components.tsx"
+    }
+  },
   "devDependencies": {
     "@next-utils/typescript-config": "workspace:*",
     "@types/node": "^22.10.5",
     "@types/react": "^19",
-    "next": "15.2.0-canary.2",
+    "next": "15.2.0-canary.6",
     "react": "^19.0.0"
   },
   "peerDependencies": {

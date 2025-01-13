@@ -1,3 +1,15 @@
 .root {
-  padding: 1rem;
+  padding: 16px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.description {
+  font-size: 14px;
+  color: cyan;
+  text-transform: capitalize;
 }

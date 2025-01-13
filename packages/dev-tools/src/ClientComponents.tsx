@@ -3,19 +3,27 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { ExpandIcon, FoldHorizontalIcon } from "lucide-react";
-import { type PropsWithChildren } from "react";
+import { useState, type PropsWithChildren } from "react";
 import { useHydrated } from "./hooks";
 import styles from "./index.module.css";
 import { IconButton } from "./ui/IconButton";
+import { ModalRoot } from "./ui/Modal";
+import { useReportWebVitals } from "next/web-vitals";
 
-const Hydration = ({ children }: PropsWithChildren) => {
+export const AwaitHydration = ({ children }: PropsWithChildren) => {
   const hasHydrated = useHydrated();
   if (!hasHydrated) return null;
   return <>{children}</>;
 };
 
 export const sidebarOpen = atomWithStorage("ndt.sidebarOpen", false);
-export const darkMode = atomWithStorage("ndt.darkMode", true);
+export const darkMode = atomWithStorage("ndt.darkMode", false);
+
+export const devtoolsOpen = atomWithStorage("ndt.devtoolsOpen", true);
+
+export const useDevtoolsOpen = () => {
+  return useAtom(devtoolsOpen);
+};
 
 export const useDarkMode = () => {
   return useAtom(darkMode);
@@ -35,9 +43,9 @@ const UnsuspendedSidebar = ({ children }: PropsWithChildren) => {
 
 export const Sidebar: typeof UnsuspendedSidebar = ({ children }) => {
   return (
-    <Hydration>
+    <AwaitHydration>
       <UnsuspendedSidebar>{children}</UnsuspendedSidebar>
-    </Hydration>
+    </AwaitHydration>
   );
 };
 
@@ -56,9 +64,9 @@ const UnsuspendedSidebarToggle = () => {
 
 export const SidebarToggle: typeof UnsuspendedSidebarToggle = () => {
   return (
-    <Hydration>
+    <AwaitHydration>
       <UnsuspendedSidebarToggle />
-    </Hydration>
+    </AwaitHydration>
   );
 };
 
@@ -74,9 +82,12 @@ const UnsuspendedDevtoolsWrapper = ({ children }: PropsWithChildren) => {
 export const DevtoolsWrapper: typeof UnsuspendedDevtoolsWrapper = ({
   children,
 }) => {
+  const [open, setOpen] = useDevtoolsOpen();
   return (
-    <Hydration>
-      <UnsuspendedDevtoolsWrapper>{children}</UnsuspendedDevtoolsWrapper>
-    </Hydration>
+    <AwaitHydration>
+      <ModalRoot open={open} onOpenChange={setOpen}>
+        <UnsuspendedDevtoolsWrapper>{children}</UnsuspendedDevtoolsWrapper>
+      </ModalRoot>
+    </AwaitHydration>
   );
 };
